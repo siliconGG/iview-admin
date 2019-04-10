@@ -1,11 +1,6 @@
 import axios from 'axios'
-<<<<<<< HEAD
 import Cookies from 'js-cookie'
 import store from '@/store'
-import {TOKEN_KEY} from './util'
-=======
-import store from '@/store'
->>>>>>> 1d06fb3a01ddefa6e96ab6b024b816bd877ab556
 // import { Spin } from 'iview'
 const addErrorLog = errorInfo => {
   const { statusText, status, request: { responseURL } } = errorInfo
@@ -41,13 +36,10 @@ class HttpRequest {
   interceptors (instance, url) {
     // 请求拦截
     instance.interceptors.request.use(config => {
-<<<<<<< HEAD
       let token = Cookies.get('token')
       if (token) {
         config.headers['token'] = token
       }
-=======
->>>>>>> 1d06fb3a01ddefa6e96ab6b024b816bd877ab556
       // 添加全局的loading...
       if (!Object.keys(this.queue).length) {
         // Spin.show() // 不建议开启，因为界面不友好

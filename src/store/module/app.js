@@ -9,15 +9,10 @@ import {
   routeEqual,
   getRouteTitleHandled,
   localSave,
-<<<<<<< HEAD
   localRead,
   backendMenusToRouters
 } from '@/libs/util'
 import { listUserMenus } from '@/api/user'
-=======
-  localRead
-} from '@/libs/util'
->>>>>>> 1d06fb3a01ddefa6e96ab6b024b816bd877ab556
 import beforeClose from '@/router/before-close'
 import { saveErrorLogger } from '@/api/data'
 import router from '@/router'
@@ -40,7 +35,6 @@ export default {
     homeRoute: getHomeRoute(routers, homeName),
     local: localRead('local'),
     errorList: [],
-<<<<<<< HEAD
     hasReadErrorPage: false,
     routers: [],
     hasGetRouter: false
@@ -56,15 +50,6 @@ export default {
     setHasGetRouter (state, status) {
       state.hasGetRouter = status
     },
-=======
-    hasReadErrorPage: false
-  },
-  getters: {
-    menuList: (state, getters, rootState) => getMenuByRouter(routers, rootState.user.access),
-    errorCount: state => state.errorList.length
-  },
-  mutations: {
->>>>>>> 1d06fb3a01ddefa6e96ab6b024b816bd877ab556
     setBreadCrumb (state, route) {
       state.breadCrumbList = getBreadCrumbList(route, state.homeRoute)
     },
@@ -119,7 +104,6 @@ export default {
     }
   },
   actions: {
-<<<<<<< HEAD
     getRouters ({ commit }) {
       return new Promise((resolve, reject) => {
         try {
@@ -136,8 +120,6 @@ export default {
         }
       })
     },
-=======
->>>>>>> 1d06fb3a01ddefa6e96ab6b024b816bd877ab556
     addErrorLog ({ commit, rootState }, info) {
       if (!window.location.href.includes('error_logger_page')) commit('setHasReadErrorLoggerStatus', false)
       const { user: { token, userId, userName } } = rootState

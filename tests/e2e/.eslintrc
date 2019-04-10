@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 {
   "plugins": [
     "cypress"
@@ -11,17 +10,3 @@
     "strict": "off"
   }
 }
-=======
-{
-  "plugins": [
-    "cypress"
-  ],
-  "env": {
-    "mocha": true,
-    "cypress/globals": true
-  },
-  "rules": {
-    "strict": "off"
-  }
-}
->>>>>>> 1d06fb3a01ddefa6e96ab6b024b816bd877ab556

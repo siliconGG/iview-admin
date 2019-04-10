@@ -40,11 +40,7 @@ export default {
           userName,
           password
         }).then(res => {
-<<<<<<< HEAD
           const data = res.data.data
-=======
-          const data = res.data
->>>>>>> 1d06fb3a01ddefa6e96ab6b024b816bd877ab556
           commit('setToken', data.token)
           resolve()
         }).catch(err => {

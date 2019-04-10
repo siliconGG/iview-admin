@@ -4,14 +4,11 @@
       <Avatar :src="userAvator"/>
       <Icon :size="18" type="md-arrow-dropdown"></Icon>
       <DropdownMenu slot="list">
-<<<<<<< HEAD
         <DropdownItem name="message">
           消息中心<Badge style="margin-left: 10px" :count="messageUnreadCount"></Badge>
         </DropdownItem>
         <DropdownItem name="personInfo">个人信息</DropdownItem>
         <DropdownItem name="passwordModified">修改密码</DropdownItem>
-=======
->>>>>>> 1d06fb3a01ddefa6e96ab6b024b816bd877ab556
         <DropdownItem name="logout">退出登录</DropdownItem>
       </DropdownMenu>
     </Dropdown>
@@ -27,20 +24,16 @@ export default {
     userAvator: {
       type: String,
       default: ''
-<<<<<<< HEAD
     },
     messageUnreadCount: {
       type: Number,
       default: 0
-=======
->>>>>>> 1d06fb3a01ddefa6e96ab6b024b816bd877ab556
     }
   },
   methods: {
     ...mapActions([
       'handleLogOut'
     ]),
-<<<<<<< HEAD
     logout () {
       this.handleLogOut().then(() => {
         window.location = '/login'
@@ -70,16 +63,6 @@ export default {
         case 'personInfo': this.personInfo()
           break
         case 'passwordModified': this.passwordModified()
-=======
-    handleClick (name) {
-      switch (name) {
-        case 'logout':
-          this.handleLogOut().then(() => {
-            this.$router.push({
-              name: 'login'
-            })
-          })
->>>>>>> 1d06fb3a01ddefa6e96ab6b024b816bd877ab556
           break
       }
     }
