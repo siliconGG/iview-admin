@@ -341,6 +341,7 @@ export const localSave = (key, value) => {
 export const localRead = (key) => {
   return localStorage.getItem(key) || ''
 }
+<<<<<<< HEAD
 /**
  * @description 将后端菜单树转换为路由树
  * @param {Array} menus
@@ -397,3 +398,5 @@ const dateFormat = (timestamp, format) => {
 
   return format
 }
+=======
+>>>>>>> 1d06fb3a01ddefa6e96ab6b024b816bd877ab556

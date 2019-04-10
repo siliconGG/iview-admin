@@ -13,7 +13,11 @@ export default {
    * @description api请求基础路径
    */
   baseUrl: {
+<<<<<<< HEAD
     dev: 'http://localhost:8081/',
+=======
+    dev: 'https://www.easy-mock.com/mock/5add9213ce4d0e69998a6f51/iview-admin/',
+>>>>>>> 1d06fb3a01ddefa6e96ab6b024b816bd877ab556
     pro: 'https://produce.com'
   },
   /**

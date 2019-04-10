@@ -1,5 +1,13 @@
+<<<<<<< HEAD
 language: node_js
 node_js: stable
 script: npm run lint
 notifications:
   email: false
+=======
+language: node_js
+node_js: stable
+script: npm run lint
+notifications:
+  email: false
+>>>>>>> 1d06fb3a01ddefa6e96ab6b024b816bd877ab556

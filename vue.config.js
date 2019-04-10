@@ -37,6 +37,10 @@ module.exports = {
   productionSourceMap: false
   // 这里写你调用接口的基础路径，来解决跨域，如果设置了代理，那你本地开发环境的axios的baseUrl要写为 '' ，即空字符串
   // devServer: {
+<<<<<<< HEAD
   //   proxy: 'localhost:8081'
+=======
+  //   proxy: 'localhost:3000'
+>>>>>>> 1d06fb3a01ddefa6e96ab6b024b816bd877ab556
   // }
 }
