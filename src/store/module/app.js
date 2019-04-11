@@ -108,7 +108,7 @@ export default {
       return new Promise((resolve, reject) => {
         try {
           listUserMenus(commit.token).then(res => {
-            let routers = backendMenusToRouters(res.data)
+            let routers = backendMenusToRouters(res.data.data.menuList)
             commit('setRouters', routers)
             commit('setHasGetRouter', true)
             resolve(routers)

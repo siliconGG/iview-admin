@@ -9,6 +9,6 @@ Mock.mock(/\/logout/, logout)
 Mock.mock(/\/get_table_data/, getTableData)
 Mock.mock(/\/get_drag_list/, getDragList)
 Mock.mock(/\/save_error_logger/, 'success')
-Mock.mock(/\/menu\/nav/, getUserMenus)
+// Mock.mock(/\/menu\/nav/, getUserMenus)
 
 export default Mock

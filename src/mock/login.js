@@ -135,6 +135,8 @@ export const getUserMenus = req => {
       name: 'union',
       meta: {
         icon: 'md-menu',
+        hideInMenu : false,
+        showAlways : true,
         title: '学会管理'
       },
       component: 'components/main',
@@ -144,9 +146,33 @@ export const getUserMenus = req => {
           name: 'register',
           meta: {
             icon: 'md-funnel',
+            hideInMenu : false,
             title: '学会注册'
           },
           component: 'view/work/RegisterUnion.vue'
+        }
+      ]
+    },
+    {
+      path: '/system',
+      name: 'system',
+      meta: {
+        icon: 'md-menu',
+        hideInMenu : false,
+        showAlways : true,
+        title: '系统管理'
+      },
+      component: 'components/main',
+      children: [
+        {
+          path: '/menu',
+          name: 'menu',
+          meta: {
+            icon: 'md-funnel',
+            hideInMenu : false,
+            title: '菜单管理'
+          },
+          component: 'view/system/menu.vue'
         }
       ]
     }
