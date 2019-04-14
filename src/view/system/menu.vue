@@ -3,16 +3,26 @@
     <p>
       <Button type="success" @click="addOrUpdateHandle">新增</Button>
     </p>
+    <br>
     <Table border :loading="loading" :height="500" :columns="columns" :data="dataList"></Table>
+    <Modal
+      v-model="addOrUpdateVisible"
+      :closable="false">
+      <add-or-update ref="addOrUpdate" @postMenu="postMenu" @cancel="close"></add-or-update>
+      <div slot="footer"></div>
+    </Modal>
   </div>
 </template>
 
 <script>
   import axios from '@/libs/api.request'
-  import addOrUpdate from  '@/view/system/addOrUpdate'
+  import AddOrUpdate from './addOrUpdate'
+
   export default {
-    name: 'menu',
-    data() {
+    components: {
+      AddOrUpdate
+    },
+    data () {
       return {
         columns: [
           {
@@ -80,7 +90,7 @@
                   },
                   on: {
                     click: () => {
-                      this.addOrUpdateHandle(params.index)
+                      this.addOrUpdateHandle(params.index, true)
                     }
                   }
                 }, '修改'),
@@ -95,15 +105,16 @@
                     }
                   }
                 }, '删除')
-              ]);
+              ])
             }
           }
         ],
         dataList: [],
-        loading: false
+        loading: false,
+        addOrUpdateVisible: false
       }
     },
-    activated () {
+    created () {
       this.getDataList()
     },
     methods: {
@@ -113,27 +124,58 @@
           url: 'menu/list',
           method: 'get'
         }).then(res => {
-            this.dataList = res.data.data
-            this.loading = false
+          this.dataList = res.data.data
+          this.loading = false
         })
       },
-      addOrUpdateHandle (index) {
-        this.$Modal.confirm({
-          render: (h) => {
-            return h('addOrUpdate', {
-              props: {
-                value: this.dataList,
-                autofocus: true,
-                placeholder: 'Please enter your name...'
-              },
-              on: {
-                input: (val) => {
-                  this.dataList = val;
-                }
-              }
+      addOrUpdateHandle (index, update) {
+        this.addOrUpdateVisible = true
+        if (update) {
+          this.$nextTick(() => {
+            this.$refs.addOrUpdate.init(this.dataList[index].menuId, update)
+          })
+        } else {
+          this.$nextTick(() => {
+            this.$refs.addOrUpdate.init()
+          })
+        }
+      },
+      postMenu ({title, path, name, icon, component, orderNum, hideInMenu, parentId, perms, type, menuId, update}) {
+        axios.request({
+          url: `menu/info`,
+          method: `${update ? 'put' : 'post'}`,
+          data: {
+            "component": component,
+            "hideInMenu": hideInMenu,
+            "icon": icon,
+            "menuId": menuId,
+            "name": name,
+            "orderNum": orderNum,
+            "parentId": parentId,
+            "parentName": "",
+            "path": path,
+            "perms": perms,
+            "title": title,
+            "type": type
+          }
+        }).then(res => {
+          if (res.data.code === 200) {
+            this.$Message.success({
+              title: '成功',
+              content: `${update ? '更新成功' : '新增成功'}`
+            })
+          } else {
+            this.$Message.error({
+              title: '错误',
+              content: res.data.errMsg
             })
           }
+          this.addOrUpdateVisible = false
+          this.getDataList()
         })
+      },
+      close () {
+        this.addOrUpdateVisible = false
       },
       remove (index) {
         this.$Modal.confirm({
@@ -148,7 +190,7 @@
               if (res.data.code === 200) {
                 this.$Modal.success({
                   title: '成功',
-                  content: "删除成功"
+                  content: '删除成功'
                 })
               } else {
                 this.$Modal.error({
