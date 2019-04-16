@@ -17,6 +17,7 @@
 <script>
   import axios from '@/libs/api.request'
   import AddOrUpdate from './addOrUpdate'
+  import store from '@/store'
 
   export default {
     components: {
@@ -62,7 +63,7 @@
             key: 'icon'
           },
           {
-            title: '是否在左侧显示',
+            title: '是否在左侧隐藏',
             key: 'hideInMenu'
           },
           {
@@ -202,6 +203,9 @@
             })
           }
         })
+      },
+      refreshRouter () {
+        store.state.app.hasGetRouter = false
       }
     }
   }

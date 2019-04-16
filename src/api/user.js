@@ -35,3 +35,45 @@ export const listUserMenus = (token) => {
   })
 }
 
+export const getUnreadCount = () => {
+  return axios.request({
+    url: 'message/counts',
+    method: 'get'
+  })
+}
+
+export const getMessage = () => {
+  return axios.request({
+    url: 'message/info',
+    method: 'get'
+  })
+}
+
+export const getContentByMsgId = msg_id => {
+  return axios.request({
+    url: `message/info/${msg_id}`,
+    method: 'get'
+  })
+}
+
+export const hasRead = msg_id => {
+  return axios.request({
+    url: `message/info/${msg_id}`,
+    method: 'post'
+  })
+}
+
+export const removeReaded = msg_id => {
+  return axios.request({
+    url: `message/info/${msg_id}`,
+    method: 'delete'
+  })
+}
+
+export const restoreTrash = msg_id => {
+  return axios.request({
+    url: `message/info/${msg_id}`,
+    method: 'put'
+  })
+}
+

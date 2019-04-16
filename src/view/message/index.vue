@@ -22,9 +22,9 @@
           :class="titleClass"
           @on-select="handleView"
         >
-          <MenuItem v-for="item in messageList" :name="item.msg_id" :key="`msg_${item.msg_id}`">
+          <MenuItem v-for="item in messageList" :name="item.messageId" :key="`msg_${item.messageId}`">
             <div>
-              <p class="msg-title">{{ item.title }}</p>
+              <p class="msg-title">{{ item.messageTitle }}</p>
               <Badge status="default" :text="item.create_time" />
               <Button
                 style="float: right;margin-right: 20px;"
@@ -43,8 +43,8 @@
       <div class="message-page-con message-view-con">
         <Spin fix v-if="contentLoading" size="large"></Spin>
         <div class="message-view-header">
-          <h2 class="message-view-title">{{ showingMsgItem.title }}</h2>
-          <time class="message-view-time">{{ showingMsgItem.create_time }}</time>
+          <h2 class="message-view-title">{{ showingMsgItem.messageTitle }}</h2>
+          <time class="message-view-time">{{ showingMsgItem.createTime }}</time>
         </div>
         <div v-html="messageContent"></div>
       </div>
@@ -111,7 +111,7 @@ export default {
       this.contentLoading = true
       this.getContentByMsgId({ msg_id }).then(content => {
         this.messageContent = content
-        const item = this.messageList.find(item => item.msg_id === msg_id)
+        const item = this.messageList.find(item => item.messageId === msg_id)
         if (item) this.showingMsgItem = item
         if (this.currentMessageType === 'unread') this.hasRead({ msg_id })
         this.stopLoading('contentLoading')
@@ -121,7 +121,7 @@ export default {
     },
     removeMsg (item) {
       item.loading = true
-      const msg_id = item.msg_id
+      const msg_id = item.messageId
       if (this.currentMessageType === 'readed') this.removeReaded({ msg_id })
       else this.restoreTrash({ msg_id })
     }
