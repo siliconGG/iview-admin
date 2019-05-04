@@ -17,7 +17,6 @@
 <script>
   import axios from '@/libs/api.request'
   import AddOrUpdate from './addOrUpdate'
-  import store from '@/store'
 
   export default {
     components: {
@@ -28,7 +27,9 @@
         columns: [
           {
             title: 'ID',
-            key: 'menuId'
+            key: 'menuId',
+            align: 'center',
+            width: 50
           },
           {
             title: '菜单名称',
@@ -44,11 +45,39 @@
           },
           {
             title: '图标',
-            key: 'icon'
+            key: 'icon',
+            width: 80,
+            align: 'center',
+            render: (h, params) => {
+              return h('div', [
+                h('Icon', {
+                  props: {
+                    type: params.row.icon
+                  }
+                })
+              ]);
+            }
           },
           {
             title: '类型',
-            key: 'type'
+            key: 'type',
+            align: 'center',
+            render: (h, params) => {
+              function f () {
+                if (params.row.type===1){
+                  return '菜单'
+                } else if (params.row.type===2){
+                  return '按钮'
+                }
+              }
+              return h('div', [
+                h('Tag', {
+                  props: {
+
+                  }
+                },f())
+              ])
+            }
           },
           {
             title: '菜单URL',
@@ -59,16 +88,14 @@
             key: 'component'
           },
           {
-            title: '图标',
-            key: 'icon'
-          },
-          {
-            title: '是否在左侧隐藏',
+            title: '左侧隐藏',
             key: 'hideInMenu'
           },
           {
             title: '排序号',
-            key: 'orderNum'
+            key: 'orderNum',
+            align: 'center',
+            width: 80
           },
           {
             title: '权限标识',
@@ -172,7 +199,7 @@
             })
           }
           this.addOrUpdateVisible = false
-          this.getDataList()
+          window.location.reload();
         })
       },
       close () {
@@ -199,13 +226,10 @@
                   content: res.data.errMsg
                 })
               }
-              this.getDataList()
+              window.location.reload();
             })
           }
         })
-      },
-      refreshRouter () {
-        store.state.app.hasGetRouter = false
       }
     }
   }

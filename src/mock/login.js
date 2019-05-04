@@ -139,19 +139,7 @@ export const getUserMenus = req => {
         showAlways : true,
         title: '学会管理'
       },
-      component: 'components/main',
-      children: [
-        {
-          path: 'register',
-          name: 'register',
-          meta: {
-            icon: 'md-funnel',
-            hideInMenu : false,
-            title: '学会注册'
-          },
-          component: 'view/work/RegisterUnion.vue'
-        }
-      ]
+      component: 'components/main'
     },
     {
       path: '/system',
