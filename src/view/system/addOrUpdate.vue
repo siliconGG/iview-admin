@@ -3,16 +3,17 @@
     <TabPane label="菜单" name="menu">
       <Form :model="menuItem" :label-width="80">
         <FormItem label="名称" style="width:400px">
-          <Input v-model="menuItem.title" placeholder="Enter something..."></Input>
+          <Input v-model="menuItem.title" placeholder="左侧菜单显示名称"></Input>
         </FormItem>
         <FormItem label="菜单URL" style="width:400px">
-          <Input v-model="menuItem.path" placeholder="Enter something..."></Input>
+          <Input v-model="menuItem.path" placeholder="网页url地址"></Input>
         </FormItem>
         <FormItem label="缓存名称" style="width:400px">
-          <Input v-model="menuItem.name" placeholder="Enter something..."></Input>
+          <Input v-model="menuItem.name" placeholder="缓存名称"></Input>
         </FormItem>
         <FormItem label="页面路径" style="width:400px">
-          <Input v-model="menuItem.component" placeholder="Enter something..."></Input>
+          <Input v-model="menuItem.component" placeholder="填写菜单页面所在位置"></Input>
+          <p>一级目录填写component/main；二级及更多目录填写component/parentView</p>
         </FormItem>
         <FormItem label="页面图标">
           <Select v-model="menuItem.icon" style="width:250px">
