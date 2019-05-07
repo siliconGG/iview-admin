@@ -13,6 +13,14 @@ import 'iview/dist/styles/iview.css'
 import './index.less'
 import '@/assets/icons/iconfont.css'
 import axios from 'axios'
+
+import Global from './view/util/Global'
+import ZkTable from 'vue-table-with-tree-grid'
+
+Vue.use(ZkTable)
+
+Vue.prototype.GLOBAL = Global
+
 // 实际打包时应该不引入mock
 /* eslint-disable */
 if (process.env.NODE_ENV !== 'production') require('@/mock')

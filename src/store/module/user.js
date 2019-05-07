@@ -82,6 +82,7 @@ export default {
           password
         }).then(res => {
           const data = res.data.data
+          window.localStorage.setItem('token', data.token)
           commit('setToken', data.token)
           resolve()
         }).catch(err => {
@@ -95,6 +96,7 @@ export default {
         logout(state.token).then(() => {
           commit('setToken', '')
           commit('setAccess', [])
+          window.localStorage.setItem('personId', '')
           resolve()
         }).catch(err => {
           reject(err)
@@ -111,6 +113,8 @@ export default {
         try {
           getUserInfo(state.token).then(res => {
             const data = res.data
+            // 将personId保存至缓存
+            window.localStorage.setItem('personId', data.personId)
             commit('setAvator', data.avator)
             commit('setUserName', data.name)
             commit('setUserId', data.user_id)

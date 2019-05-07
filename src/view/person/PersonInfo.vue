@@ -1,97 +1,122 @@
 <template>
   <div class="container">
-  <Form ref="formInline" inline>
-    <FormItem prop="account">
-      <h1 align="center">个人信息</h1>
-    </FormItem>
-    <FormItem>
-      <Button type="info" @click="enableEdit()">编辑</Button>
-    </FormItem>
-  </Form>
-  <Form ref="formdata" :model="formdata" :rules="ruleValidate" :label-width="80" :label-height="100">
-    <FormItem label="您的姓名：" prop="name">
-      <Input v-model="formdata.name" value="formdata.name" v-if="show === false" disabled=""></Input>
-      <Input v-model="formdata.name" value="formdata.name" v-if="show === true"></Input>
-    </FormItem>
-    <FormItem label="您的账号：" prop="loginName" >
-      <Input v-model="formdata.loginName" disabled=""></Input>
-    </FormItem>
-    <FormItem label="您的邮箱：" prop="mail">
-      <Input v-model="formdata.mail" v-if="show === false" disabled=""></Input>
-      <Input v-model="formdata.mail" v-if="show === true"></Input>
+    <Form ref="formInline" inline>
+      <FormItem prop="account">
+        <h1>个人信息</h1>
 
-    </FormItem>
-    <FormItem label="您加入的学会：" prop="instId">
-      <Input v-model="formdata.instId" disabled=""></Input>
+      </FormItem>
+      <Select v-model="model1"clearable  @on-change="selectSubEvent" style="width:200px">
+        <Option v-for="item in catagoryList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+      </Select>
+      <Upload action="//localhost:8081/upload/test"
+      :data="{'taskExecId':taskExecId,'docCatagory':docCatagory}">
+        <Button icon="ios-cloud-upload-outline">上传</Button>
+      </Upload>
+      <Button type="primary" @click="exportData()">导出</Button>
+      <FormItem>
 
-    </FormItem>
-    <FormItem label="您的电话：" prop="phone">
-      <Input v-model="formdata.phone" v-if="show === false" disabled=""></Input>
-      <Input v-model="formdata.phone" v-if="show === true"></Input>
+        <Button type="info" @click="enableEdit()">编辑</Button>
+      </FormItem>
+    </Form>
+    <Form ref="formdata" :model="formdata" :rules="ruleValidate" :label-width="80" :label-height="100">
+      <FormItem label="您的姓名：" prop="name">
+        <Input v-model="formdata.name" value="formdata.name" v-if="show === false" disabled=""></Input>
+        <Input v-model="formdata.name" value="formdata.name" v-if="show === true"></Input>
+      </FormItem>
+      <FormItem label="您的账号：" prop="loginName" >
+        <Input v-model="formdata.loginName" disabled=""></Input>
+      </FormItem>
+      <FormItem label="您的邮箱：" prop="mail">
+        <Input v-model="formdata.mail" v-if="show === false" disabled=""></Input>
+        <Input v-model="formdata.mail" v-if="show === true"></Input>
 
-    </FormItem>
-    <FormItem label="您的性别：" prop="sex">
-      <Row>
-        <Col span="2">
-          <RadioGroup v-model="formdata.sex" value="formdata.sex">
-            <!--<Radio label="男" v-if="formdata.sex == '女'" disabled="">男</Radio>-->
+      </FormItem>
+      <FormItem label="您加入的学会：" prop="instId">
+        <Input v-model="formdata.instId"disabled=""></Input>
 
-            <Radio label="女" v-if="show === false" disabled="">女</Radio>
-            <Radio label="女" v-if="show === true">女</Radio>
+      </FormItem>
+      <FormItem label="您的电话：" prop="phone">
+        <Input v-model="formdata.phone" v-if="show === false" disabled=""></Input>
+        <Input v-model="formdata.phone" v-if="show === true"></Input>
 
-            <Radio label="男" v-if="show === false" disabled="">男</Radio>
-            <Radio label="男" v-if="show === true">男</Radio>
-          </RadioGroup>
-        </Col>
-      </Row>
-    </FormItem>
-    <FormItem label="生日：">
-      <Row>
-        <Col span="3">
-          <FormItem prop="birthday">
-            <DatePicker type="date" confirm format="yyyy年M月d日" :value="formdata.birthday"  v-model="formdata.birthday" v-if="show === false" disabled=""></DatePicker>
-            <DatePicker type="date" confirm format="yyyy年M月d日" :value="formdata.birthday"  v-model="formdata.birthday" v-if="show === true"></DatePicker>
-          </FormItem>
-        </Col>
-      </Row>
-    </FormItem>
-    <FormItem label="您的名族：" prop="ethnic">
-      <Input v-model="formdata.ethnic" v-if="show === false" disabled=""></Input>
-      <Input v-model="formdata.ethnic" v-if="show === true"></Input>
+      </FormItem>
+      <FormItem label="您的性别：" prop="sex">
+        <Row>
+          <Col span="2">
+            <RadioGroup v-model="formdata.sex" value="formdata.sex">
+              <!--<Radio label="男" v-if="formdata.sex == '女'" disabled="">男</Radio>-->
 
-    </FormItem>
-    <FormItem label="您的党派：" prop="partisan">
-      <Input v-model="formdata.partisan" v-if="show === false" disabled=""></Input>
-      <Input v-model="formdata.partisan" v-if="show === true"></Input>
+              <Radio label="女" v-if="show === false" disabled="">女</Radio>
+              <Radio label="女" v-if="show === true">女</Radio>
 
-    </FormItem>
-    <FormItem label="您的qq：" prop="qq">
-      <Input v-model="formdata.qq" v-if="show === false" disabled=""></Input>
-      <Input v-model="formdata.qq" v-if="show === true"></Input>
+              <Radio label="男" v-if="show === false" disabled="">男</Radio>
+              <Radio label="男" v-if="show === true">男</Radio>
+            </RadioGroup>
+          </Col>
+        </Row>
+      </FormItem>
+      <FormItem label="生日：">
+        <Row>
+          <Col span="3">
+            <FormItem prop="birthday">
+              <DatePicker type="date" confirm format="yyyy年M月d日" :value="formdata.birthday"  v-model="formdata.birthday" v-if="show === false" disabled=""></DatePicker>
+              <DatePicker type="date" confirm format="yyyy年M月d日" :value="formdata.birthday"  v-model="formdata.birthday" v-if="show === true"></DatePicker>
+            </FormItem>
+          </Col>
+        </Row>
+      </FormItem>
+      <FormItem label="您的名族：" prop="ethnic">
+        <Input v-model="formdata.ethnic" v-if="show === false" disabled=""></Input>
+        <Input v-model="formdata.ethnic" v-if="show === true"></Input>
 
-    </FormItem>
-    <FormItem label="您的微信：" prop="wechat">
-      <Input v-model="formdata.wechat" v-if="show === false" disabled=""></Input>
-      <Input v-model="formdata.wechat" v-if="show === true"></Input>
+      </FormItem>
+      <FormItem label="您的党派：" prop="partisan">
+        <Input v-model="formdata.partisan" v-if="show === false" disabled=""></Input>
+        <Input v-model="formdata.partisan" v-if="show === true"></Input>
 
-    </FormItem>
-    <FormItem label="您的备注" prop="memo">
-      <Input v-model="formdata.memo" type="textarea" :autosize="{minRows: 2,maxRows: 5}" v-if="show === false" disabled=""></Input>
-      <Input v-model="formdata.memo" type="textarea" :autosize="{minRows: 2,maxRows: 5}" v-if="show === true"></Input>
-    </FormItem>
-    <FormItem>
-      <Button type="primary" @click="infoModified('formdata')">确定</Button>
-      <Button @click="handleReset('formdata')" style="margin-left: 8px">取消编辑</Button>
-    </FormItem>
-  </Form>
+      </FormItem>
+      <FormItem label="您的qq：" prop="qq">
+        <Input v-model="formdata.qq" v-if="show === false" disabled=""></Input>
+        <Input v-model="formdata.qq" v-if="show === true"></Input>
+
+      </FormItem>
+      <FormItem label="您的微信：" prop="wechat">
+        <Input v-model="formdata.wechat" v-if="show === false" disabled=""></Input>
+        <Input v-model="formdata.wechat" v-if="show === true"></Input>
+
+      </FormItem>
+      <FormItem label="您的备注" prop="memo">
+        <Input v-model="formdata.memo" type="textarea" :autosize="{minRows: 2,maxRows: 5}" v-if="show === false" disabled=""></Input>
+        <Input v-model="formdata.memo" type="textarea" :autosize="{minRows: 2,maxRows: 5}" v-if="show === true"></Input>
+      </FormItem>
+      <FormItem>
+        <Button type="primary" @click="infoModified('formdata')">确定</Button>
+        <Button @click="handleReset('formdata')" style="margin-left: 8px">取消编辑</Button>
+      </FormItem>
+    </Form>
   </div>
 </template>
 <script>
 // import dateFormat from '../../../build/util.js'
-import { dateFormat } from '@/libs/util'
 export default {
   data () {
     return {
+      model1: '',
+      docCatagory: '未选择',
+      catagoryList: [{
+        value: '通知',
+        label: '通知'
+      },
+      {
+        value: '策划方案',
+        label: '策划方案'
+      },
+      {
+        value: '报告',
+        label: '报告'
+      }
+      ],
+      taskExecId: '1',
       show: false,
       ruleValidate: {
         name: [
@@ -128,13 +153,45 @@ export default {
   },
   methods: {
 
+    selectSubEvent: function (value) {
+      this.docCatagory = value
+    },
+
+    exportData: function () {
+      let url = `//localhost:8081/upload/download?taskExecId=${this.taskExecId}`
+      window.open(url)
+    },
+
+    dateFormat (timestamp, format) {
+      var date = {
+        'M+': timestamp.getMonth() + 1,
+        'd+': timestamp.getDate(),
+        'h+': timestamp.getHours(),
+        'm+': timestamp.getMinutes(),
+        's+': timestamp.getSeconds(),
+        'q+': Math.floor((timestamp.getMonth() + 3) / 3),
+        'S+': timestamp.getMilliseconds()
+      }
+
+      if (/(y+)/i.test(format)) {
+        format = format.replace(RegExp.$1, (timestamp.getFullYear() + '').substr(4 - RegExp.$1.length))
+      }
+
+      for (var k in date) {
+        if (new RegExp('(' + k + ')').test(format)) {
+          format = format.replace(RegExp.$1, RegExp.$1.length === 1 ? date[k] : ('00' + date[k]).substr(('' + date[k]).length))
+        }
+      }
+
+      return format
+    },
     fetchData () {
       var that = this
       let instance = this.$ajax.create({
         // 用来将token放到header上
         headers: {'token': window.localStorage.getItem('token')}
       })
-      instance.get('http://localhost:8081' + '/member/getCurrentUser', {})
+      instance.get(that.GLOBAL.serverPath + '/member/getCurrentUser', {})
         .then(function (response) {
           if (response.data.success) {
             that.formdata.loginName = window.localStorage.getItem('username')

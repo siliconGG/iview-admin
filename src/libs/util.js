@@ -374,7 +374,7 @@ const backendMenuToRoute = (menu) => {
   return route
 }
 
-const dateFormat = (timestamp, format) => {
+export const dateFormat = (timestamp, format) => {
   var date = {
     'M+': timestamp.getMonth() + 1,
     'd+': timestamp.getDate(),
