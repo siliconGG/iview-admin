@@ -81,10 +81,14 @@ export default {
           userName,
           password
         }).then(res => {
-          const data = res.data.data
-          window.localStorage.setItem('token', data.token)
-          commit('setToken', data.token)
-          resolve()
+          if (res.data.success) {
+            const data = res.data.data
+            window.localStorage.setItem('token', data.token)
+            commit('setToken', data.token)
+            resolve()
+          } else {
+            reject(res.data.errMsg)
+          }
         }).catch(err => {
           reject(err)
         })

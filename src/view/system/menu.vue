@@ -157,7 +157,6 @@
         })
       },
       addOrUpdateHandle (index, update) {
-        this.addOrUpdateVisible = true
         if (update) {
           this.$nextTick(() => {
             this.$refs.addOrUpdate.init(this.dataList[index].menuId, update)
@@ -167,6 +166,7 @@
             this.$refs.addOrUpdate.init()
           })
         }
+        this.addOrUpdateVisible = true
       },
       postMenu ({title, path, name, icon, component, orderNum, hideInMenu, parentId, perms, type, menuId, update}) {
         axios.request({

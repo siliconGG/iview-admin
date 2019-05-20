@@ -8,7 +8,7 @@
       <Card icon="log-in" title="欢迎登录" :bordered="false">
         <div class="form-con">
           <login-form @on-success-valid="handleSubmit"></login-form>
-          <p class="login-tip">输入任意用户名和密码即可</p>
+          <router-link :to="{name: 'register'}">没有账号？点此注册～</router-link>
         </div>
       </Card>
     </div>
@@ -34,6 +34,8 @@ export default {
             name: this.$config.homeName
           })
         })
+      }).catch(err => {
+        this.$Message.error(err)
       })
     }
   }

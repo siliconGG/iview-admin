@@ -13,7 +13,7 @@
         </FormItem>
         <FormItem label="页面路径" style="width:400px">
           <Input v-model="menuItem.component" placeholder="填写菜单页面所在位置"></Input>
-          <p>一级目录填写component/main；二级及更多目录填写component/parentView</p>
+          <p>一级目录填写components/main；二级及更多目录填写components/parentView</p>
         </FormItem>
         <FormItem label="页面图标">
           <Select v-model="menuItem.icon" style="width:250px">

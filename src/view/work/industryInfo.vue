@@ -177,13 +177,7 @@
               url: `societies/industries/${this.dataList[index].industryId}`,
               method: 'delete'
             }).then(
-              axios.request({
-                url: 'societies/industries',
-                method: 'get'
-              }).then(res => {
-                this.dataList = res.data.data
-                this.loading = false
-              })
+              this.getDataList
             )
           }
         })
