@@ -65,17 +65,25 @@
               </FormItem>
             </Col>
           </Row>
-          <Divider size="small">会员信息</Divider>
+          <Divider size="small">其他信息</Divider>
           <Form>
             <Row>
-              <Col span="12" style="padding-right:10px">
+              <Col span="8" style="padding-right:10px">
+                <FormItem label="分会信息：">
+                  <Select v-model="selectSubs" clearable filterable @on-change="selectSubEvent">
+                    <Option v-for="item in subList" :value="item.value" :key="item.value">{{ item.label }}
+                    </Option>
+                  </Select>
+                </FormItem>
+              </Col>
+              <Col span="8" style="padding-right:10px">
                 <FormItem label="个人会员：">
                   <Select v-model="selectMembers" clearable filterable @on-change="selectMemberEvent">
                     <Option v-for="item in memberList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                   </Select>
                 </FormItem>
               </Col>
-              <Col span="12" style="padding-right:10px">
+              <Col span="8" style="padding-right:10px">
                 <FormItem label="单位会员：">
                   <Select v-model="selectComps" clearable filterable @on-change="selectCompEvent">
                     <Option v-for="item in compList" :value="item.value" :key="item.value">{{ item.label }}</Option>
@@ -84,7 +92,17 @@
               </Col>
             </Row>
             <Row>
-              <Col span="12">
+              <Col span="8">
+                <FormItem label="分会信息：" prop="subInfo">
+                  <Card>
+                    <div slot="title" inline>{{subInfo.title}}
+                      <Button type="text" @click="goSub(subInfo.id)">详情</Button>
+                    </div>
+                    <p>{{subInfo.content}}</p>
+                  </Card>
+                </FormItem>
+              </Col>
+              <Col span="8">
                 <FormItem label="分会信息：" prop="memberInfo">
                   <Card style="height: 120px;">
                     <div slot="title" inline>{{memberInfo.title}}<Button type="text" @click="goSub(memberInfo.id)">详情</Button></div>
@@ -92,7 +110,7 @@
                   </Card>
                 </FormItem>
               </Col>
-              <Col span="12">
+              <Col span="8">
                 <FormItem label="分会信息：" prop="compInfo">
                   <Card style="height: 120px;">
                     <div slot="title" inline>{{compInfo.title}}<Button type="text" @click="goSub(compInfo.id)">详情</Button></div>
@@ -141,40 +159,40 @@
       </Content>
       <!--<Divider type="vertical"></Divider>-->
 
-      <Sider width="500">
-        <div class="card">
-          <Card style="width:500px;background:#eee;padding: 20px">
-            <Form ref="formInline" inline>
-              <FormItem prop="account">
-                <h2>分会信息</h2>
-              </FormItem>
-            </Form>
-            <Form>
-              <Row>
-                <Col span="22" style="padding-right:10px">
-                  <FormItem label="请选择分会：" prop="phone">
-                    <Select v-model="selectSubs" clearable filterable @on-change="selectSubEvent">
-                      <Option v-for="item in subList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                    </Select>
-                  </FormItem>
-                </Col>
-              </Row>
-              <Row>
-                <Col span="22">
-                  <FormItem label="分会信息：" prop="subInfo">
-                    <Card>
-                      <div slot="title" inline>{{subInfo.title}}
-                        <Button type="text" @click="goSub(subInfo.id)">详情</Button>
-                      </div>
-                      <p>{{subInfo.content}}</p>
-                    </Card>
-                  </FormItem>
-                </Col>
-              </Row>
-            </Form>
-          </Card>
-        </div>
-      </Sider>
+      <!--<Sider width="500">-->
+        <!--<div class="card">-->
+          <!--<Card style="width:500px;background:#eee;padding: 20px">-->
+            <!--<Form ref="formInline" inline>-->
+              <!--<FormItem prop="account">-->
+                <!--<h2>分会信息</h2>-->
+              <!--</FormItem>-->
+            <!--</Form>-->
+            <!--<Form>-->
+              <!--<Row>-->
+                <!--<Col span="22" style="padding-right:10px">-->
+                  <!--<FormItem label="请选择分会：" prop="phone">-->
+                    <!--<Select v-model="selectSubs" clearable filterable @on-change="selectSubEvent">-->
+                      <!--<Option v-for="item in subList" :value="item.value" :key="item.value">{{ item.label }}</Option>-->
+                    <!--</Select>-->
+                  <!--</FormItem>-->
+                <!--</Col>-->
+              <!--</Row>-->
+              <!--<Row>-->
+                <!--<Col span="22">-->
+                  <!--<FormItem label="分会信息：" prop="subInfo">-->
+                    <!--<Card>-->
+                      <!--<div slot="title" inline>{{subInfo.title}}-->
+                        <!--<Button type="text" @click="goSub(subInfo.id)">详情</Button>-->
+                      <!--</div>-->
+                      <!--<p>{{subInfo.content}}</p>-->
+                    <!--</Card>-->
+                  <!--</FormItem>-->
+                <!--</Col>-->
+              <!--</Row>-->
+            <!--</Form>-->
+          <!--</Card>-->
+        <!--</div>-->
+      <!--</Sider>-->
     </Layout>
     <Modal v-model="showPeriod" title="学会历届">
       <Collapse v-model="showPanel" accordion>
@@ -360,7 +378,7 @@ export default {
         // 用来将token放到header上
         headers: {'token': window.localStorage.getItem('token')}
       })
-      instance.get(that.GLOBAL.serverPath + '/institute/getInstituteByInstId?instId=' + instId)
+      instance.get(that.GLOBAL.serverPath + '/institute/getInstituteByInstId?instId=' + this.$route.params.instId)
         .then(function (response) {
           if (response.data.success) {
             that.formdata = response.data.data

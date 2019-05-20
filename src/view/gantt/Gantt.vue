@@ -22,7 +22,9 @@ export default {
       }
     }
   },
-
+  beforeCreate () {
+    gantt.clearAll();
+  },
   methods: {
     undo: function () {
       gantt.undo()
@@ -117,7 +119,9 @@ export default {
           break
       }
     },
-
+    deleteTask: function (id) {
+      gantt.deleteTask(id)
+    },
     addActivityTask: function (task) {
       gantt.addTask({
         id: task.id,
@@ -134,7 +138,8 @@ export default {
         act_eng_name: task.act_eng_name,
         act_address: task.act_address,
         act_memo: task.act_memo,
-        act_status_id: task.act_status_id
+        act_status_id: task.act_status_id,
+        act_status_name: task.act_status_name
       }, null, 1)
     },
     addSubActivityTask: function (task) {
@@ -155,7 +160,8 @@ export default {
         act_eng_name: task.act_eng_name,
         act_address: task.act_address,
         act_memo: task.act_memo,
-        act_status_id: task.act_status_id
+        act_status_id: task.act_status_id,
+        act_status_name: task.act_status_name,
       }, task.parent, 1)
     },
 

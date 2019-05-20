@@ -265,7 +265,8 @@ export default {
     },
     edit (index) {
       this.$router.push({
-        name: 'instInfo'
+        name: 'instInfo',
+        params: {instId: this.instituteData[index].instId}
       })
     },
     request (currentPage) {

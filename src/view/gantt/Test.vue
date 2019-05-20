@@ -9,18 +9,6 @@
           <Button>常用模板</Button>
         </FormItem>
       </Row>
-      <Row>
-        <FormItem label="请选择文档类型：">
-          <Select v-model="select1" clearable  @on-change="selectSubEvent" style="width:200px">
-            <Option v-for="item in catagoryList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-          </Select>
-        </FormItem>
-        <Upload action="//localhost:8081/upload/test"
-                :data="{'taskExecId':taskExecId,'docCatagory':docCatagory}">
-          <Button icon="ios-cloud-upload-outline">上传</Button>
-        </Upload>
-        <Button type="primary" @click="exportData()">导出</Button>
-      </Row>
     </Form>
     <Modal
       v-model="modal1"
@@ -342,6 +330,113 @@
       </Form>
     </Modal>
 
+    <Modal v-model="modal4"
+           title="新建里程碑"
+           @on-ok="addMilestone"
+           width="1000">
+      <Form ref="milestone" :model="milestone" :rules="ruleValidate" :label-width="80" :label-height="100">
+        <Row>
+          <Col span="8">
+            <FormItem label="里程碑名：" prop="milestoneName">
+              <Input v-model="milestone.milestoneName" value="milestone.milestoneName"></Input>
+            </FormItem>
+          </Col>
+          <Col span="8">
+            <FormItem label="说明：" prop="milestoneMemo">
+              <Input v-model="milestone.milestoneMemo" type="textarea" :rows="4" value="milestone.milestoneMemo"></Input>
+            </FormItem>
+          </Col>
+        </Row>
+        <Row>
+          <Col span="8">
+            <FormItem label="启动日期：" prop="milestoneFrom">
+              <DatePicker type="date" format="yyyy年M月d日" value="yyyy-MM-dd" placeholder="选择日期"
+                          v-model="milestone.milestoneFrom"></DatePicker>
+            </FormItem>
+          </Col>
+          <Col span="6">
+            <FormItem label="结束日期：" prop="milestoneTo">
+              <DatePicker type="date" format="yyyy年M月d日" value="yyyy-MM-dd" placeholder="选择日期"
+                          v-model="milestone.milestoneTo"></DatePicker>
+            </FormItem>
+          </Col>
+        </Row>
+      </Form>
+    </Modal>
+    <Modal v-model="modal5"
+           title="新建任务检查点"
+           @on-ok="addTaskCheckPoint"
+           width="1000">
+      <Form ref="taskCheckPoint" :model="taskCheckPoint" :rules="ruleValidate" :label-width="80" :label-height="100">
+        <Row>
+          <Col span="8">
+            <FormItem label="检查点名称：" prop="taskCheckPointName">
+              <Input v-model="taskCheckPoint.taskCheckPointName" value="taskCheckPoint.taskCheckPointName"></Input>
+            </FormItem>
+          </Col>
+          <Col span="8">
+            <FormItem label="检查点说明：" prop="taskCheckPointMemo">
+              <Input v-model="taskCheckPoint.taskCheckPointMemo" type="textarea" :rows="4" value="taskCheckPoint.milestoneMemo"></Input>
+            </FormItem>
+          </Col>
+        </Row>
+        <Row>
+          <Col span="8">
+            <FormItem label="检查时间点：" prop="taskCheckPointDate">
+              <DatePicker type="date" format="yyyy年M月d日" value="yyyy-MM-dd" placeholder="选择日期"
+                          v-model="taskCheckPoint.taskCheckPointDate"></DatePicker>
+            </FormItem>
+          </Col>
+        </Row>
+      </Form>
+    </Modal>
+
+
+
+    <div>
+      <Drawer title="里程碑信息" :closable="false" width="640" v-model="value1" >
+        <div>
+          <Collapse v-model="showPanel" accordion>
+            <Panel v-for='(list, index) in milestoneLists'  v-bind:key='list.id' >
+              {{list.milestoneName}}
+              <div slot="content">
+                <h6 :style="pStyle">里程碑id：{{list.id}} <Divider type="vertical" /> 里程碑类型：{{list.milestoneType}}里程碑</h6><Divider />
+                <h6 :style="pStyle">里程碑备注：{{list.milestoneMemo}}</h6>
+
+                <h6 :style="pStyle">
+                  里程碑汇报：{{list.milestoneReport}}
+                  <Button type="primary" shape="circle" :style="bStyle" @click="addReport(list)">填写汇报</Button>
+                </h6>
+                <h6 :style="pStyle">
+                  里程碑反馈：{{list.milestoneMonitor}}
+                  <Button type="primary" shape="circle" :style="bStyle" @click="addFeedback(list)">填写反馈</Button>
+                </h6>
+                <Divider/>
+                <h6 :style="pStyle">开始时间：{{list.milestoneFrom}}<Divider type="vertical" /> 结束时间：{{list.milestoneTo}}</h6><Divider />
+              </div>
+            </Panel>
+          </Collapse>
+        </div>
+      </Drawer>
+    </div>
+    <div>
+      <Drawer title="检查点信息" :closable="false" width="640" v-model="value2" >
+        <div>
+          <Collapse v-model="showPanel2" accordion>
+            <Panel v-for='(list, index) in taskCheckPointLists'  v-bind:key='list.id' >
+              {{list.taskCheckPointName}}
+              <div slot="content">
+                <h6 :style="pStyle">检查点id：{{list.id}}</h6><Divider />
+                <h6 :style="pStyle">检查点备注：{{list.taskCheckPointMemo}}</h6>
+                <h6 :style="pStyle">检查点时间：{{list.taskCheckPointDate}} </h6>
+              </div>
+            </Panel>
+          </Collapse>
+        </div>
+      </Drawer>
+    </div>
+
+
     <div id="example">
       <ul class="switch-list">
         <li class="switch-item" v-for="item in propList">
@@ -375,14 +470,29 @@
             <Button @click="setIdType(scope.row.id, scope.row.type, 'addSub')" >新增子活动</Button>
             <Button @click="setIdType(scope.row.id, scope.row.type, 'addTask')">新增任务</Button>
           </div>
-          <Button type="error" @click="stop(scope.row.id, scope.row.type)">停用</Button>
         </template>
 
         <template slot="publish" slot-scope="scope">
           <div v-if="scope.row.type !== '任务'">
-            <Button type="success" @click="stop(scope.row.id, scope.row.type)">发布</Button>
+            <div v-if="scope.row.publish == false">
+            <Button type="success" @click="publish(scope.row.id, scope.row.type)">发布</Button>
+            </div>
+            <div v-else>
+              <p>已发布</p>
+            </div>
+            <Button type="error" @click="stop(scope.row.id, scope.row.type)">停用</Button>
           </div>
         </template>
+
+        <template slot="milestone" slot-scope="scope">
+          <ButtonGroup>
+            <Button type="primary" @click="setIdType(scope.row.id, scope.row.type,'addMilestone')">新建</Button>
+            <Button type="info" @click="showMileStone(scope.row.id, scope.row.type)">查看</Button>
+          </ButtonGroup>
+        </template>
+
+
+
       </zk-table>
     </div>
 
@@ -426,22 +536,6 @@ export default {
     return {
 
       actId: '',
-      select1: '',
-      catagoryList: [{
-        value: '通知',
-        label: '通知'
-      },
-      {
-        value: '策划方案',
-        label: '策划方案'
-      },
-      {
-        value: '报告',
-        label: '报告'
-      }
-      ],
-      docCatagory: '未选择',
-      taskExecId: '1',
       // 用于添加子活动时告诉后端父节点类型
       parentId: '',
       type: '',
@@ -484,7 +578,17 @@ export default {
           }
         ]
       },
-
+      pStyle: {
+        fontSize: '16px',
+        color: 'rgba(0,0,0,0.85)',
+        lineHeight: '24px',
+        display: 'block',
+        marginBottom: '16px'
+      },
+      bStyle: {
+        position: 'absolute',
+        right: '16px',
+      },
       taskIndex: 1,
       taskData: {
         actId: '',
@@ -506,8 +610,35 @@ export default {
             taskChargerDuty: ''
           }
         ]
-
       },
+      value1: false,
+      showPanel: '0',
+      value2: false,
+      showPanel2: '0',
+      milestoneLists: [],
+      taskCheckPointLists: [],
+
+      // 活动子活动共用该里程碑字段
+      milestone: {
+        milestoneName:'',
+        milestoneMemo: '',
+        milestoneFrom: '',
+        milestoneTo: '',
+        milestoneReport: '',
+        milestoneMonitor: '',
+      },
+
+      // 任务检查点字段
+      taskCheckPoint: {
+        taskCheckPointName: '',
+        taskCheckPointMemo: '',
+        taskCheckPointDate: ''
+    },
+
+
+
+
+
       personList: [],
       industryList: [],
       orderList: [
@@ -541,6 +672,8 @@ export default {
       modal1: false,
       modal2: false,
       modal3: false,
+      modal4: false,
+      modal5: false,
       props: {
         // border: false,
         // showHeader: true,
@@ -646,18 +779,24 @@ export default {
         {
           label: '开始时间',
           prop: 'startTime',
-          width: '200px'
+          width: '130px'
 
         },
         {
           label: '结束时间',
           prop: 'endTime',
-          width: '200px'
+          width: '130px'
 
         },
         {
+          label: '里程碑',
+          minWidth: '130px',
+          type: 'template',
+          template: 'milestone'
+        },
+        {
           label: '操作',
-          minWidth: '100px',
+          minWidth: '120px',
           type: 'template',
           template: 'operate'
         },
@@ -691,7 +830,8 @@ export default {
         ganttPersonList: []
       },
       selectedTask: null,
-      messages: []
+      messages: [],
+      reloadFlag: true
     }
   },
   computed: {
@@ -713,9 +853,19 @@ export default {
   },
 
   created () {
-    this.fetchData(window.localStorage.getItem('personId'))
+    // this.reload();
+    this.fetchData()
   },
+
   methods: {
+    reload() {
+      if (1 == window.localStorage.getItem("reloadFlag")) {
+        location.reload();
+        window.localStorage.setItem("reloadFlag", 0);
+      } else {
+        window.localStorage.setItem("reloadFlag", 1);
+      }
+    },
     handleAddActSub () {
       this.actSubIndex++
       this.activitySubData.personChargers.push({
@@ -747,14 +897,6 @@ export default {
     handleRemoveActSub (index) {
       this.activitySubData.personChargers[index].status = 0
       this.activitySubData.personChargers[index].actSubChargerDuty = 4
-    },
-
-    selectSubEvent: function (value) {
-      this.docCatagory = value
-    },
-    exportData: function () {
-      let url = `//localhost:8081/upload/download?taskExecId=${this.taskExecId}`
-      window.open(url)
     },
     getName (item) {
       switch (item) {
@@ -812,6 +954,7 @@ export default {
           obj.introduction = '介绍'
           obj.type = '活动'
           obj.children = []
+          obj.publish = false
           that.data.push(obj)
           let dataAdd = {
             id: obj.id,
@@ -849,8 +992,214 @@ export default {
         this.modal2 = true
       } else if (judge === 'addTask') {
         this.modal3 = true
+      } else if (judge === 'addMilestone') {
+        if (type === "任务") {
+          this.modal5 = true;
+        } else {
+          this.modal4 = true;
+        }
       }
     },
+
+    dateFormat (timestamp, format) {
+      var date = {
+        'M+': timestamp.getMonth() + 1,
+        'd+': timestamp.getDate(),
+        'h+': timestamp.getHours(),
+        'm+': timestamp.getMinutes(),
+        's+': timestamp.getSeconds(),
+        'q+': Math.floor((timestamp.getMonth() + 3) / 3),
+        'S+': timestamp.getMilliseconds()
+      }
+
+      if (/(y+)/i.test(format)) {
+        format = format.replace(RegExp.$1, (timestamp.getFullYear() + '').substr(4 - RegExp.$1.length))
+      }
+
+      for (var k in date) {
+        if (new RegExp('(' + k + ')').test(format)) {
+          format = format.replace(RegExp.$1, RegExp.$1.length === 1 ? date[k] : ('00' + date[k]).substr(('' + date[k]).length))
+        }
+      }
+
+      return format
+    },
+
+    addReport(list) {
+      let that = this
+      let instance = this.$ajax.create({
+        // 用来将token放到header上
+        headers: {'token': window.localStorage.getItem('token')}
+      })
+      let temp = '';
+      this.$Modal.confirm({
+        render: (h) => {
+          return h('Input', {
+            props: {
+              value: list.milestoneReport,
+              placeholder: '填写或修改汇报'
+            },
+            on: {
+              input: (val) => {
+                temp = val;
+              }
+            },
+          })
+        },
+        onOk: () => {
+          instance.post(that.GLOBAL.serverPath + "/milestone/modifyMilestone", {
+            type: list.milestoneType,
+            milestoneId: list.id,
+            milestoneName: list.milestoneName,
+            milestoneMemo: list.milestoneMemo,
+            milestoneFrom: list.milestoneFrom,
+            milestoneTo:list.milestoneTo,
+            milestoneReport: temp,
+            milestoneMonitor: list.milestoneMonitor
+          }).then(res => {
+            if (res.data.success) {
+              list.milestoneReport = temp;
+              alert("新增汇报成功！");
+            } else {
+              alert("服务器出小差拉～～")
+            }
+          }).catch(error => {
+            alert("系统出故障拉！～～")
+          });
+          this.$Message.info('Clicked ok');
+        },
+        onCancel: () => {
+          temp = '';
+          this.$Message.info('Clicked cancel');
+        }
+      });
+    },
+    addFeedback(list) {
+      let that = this
+      let instance = this.$ajax.create({
+        // 用来将token放到header上
+        headers: {'token': window.localStorage.getItem('token')}
+      })
+      let temp = '';
+      this.$Modal.confirm({
+        render: (h) => {
+          return h('Input', {
+            props: {
+              value: list.milestoneMonitor,
+              placeholder: '填写或修改检查反馈'
+            },
+            on: {
+              input: (val) => {
+                temp = val;
+              }
+            },
+
+          })
+        },
+        onOk: () => {
+          instance.post(that.GLOBAL.serverPath + "/milestone/modifyMilestone", {
+            type: list.milestoneType,
+            milestoneId: list.id,
+            milestoneName: list.milestoneName,
+            milestoneMemo: list.milestoneMemo,
+            milestoneFrom: list.milestoneFrom,
+            milestoneTo:list.milestoneTo,
+            milestoneReport: list.milestoneReport,
+            milestoneMonitor: temp
+          }).then(res => {
+            if (res.data.success) {
+              list.milestoneMonitor = temp;
+              alert("新增检查反馈成功！");
+            } else {
+              alert("服务器出小差拉～～")
+            }
+          }).catch(error => {
+            alert("系统出故障拉！～～")
+          });
+          this.$Message.info('Clicked ok');
+        },
+        onCancel: () => {
+          temp = '';
+          this.$Message.info('Clicked cancel');
+        }
+      });
+    },
+    showMileStone(id, type) {
+      this.taskCheckPointLists = [];
+      this.milestoneLists = [];
+      let that = this
+      let instance = this.$ajax.create({
+        // 用来将token放到header上
+        headers: {'token': window.localStorage.getItem('token')}
+      })
+      if (type === "任务") {
+        instance.get(that.GLOBAL.serverPath + "/task/getTaskCheckPoint?taskId=" + id)
+          .then(res => {
+            if (res.data.success) {
+              let results = res.data.data
+              results.forEach( result => {
+                let obj = {};
+                obj.id = result.taskCheckPointId;
+                obj.taskCheckPointName = result.taskCheckPointName;
+                obj.taskCheckPointMemo = result.taskCheckPointMemo;
+                obj.taskCheckPointDate = that.dateFormat(new Date(result.taskCheckPointDate * 1000), 'yyyy-MM-dd')
+                that.taskCheckPointLists.push(obj);
+              })
+              that.showPanel2 = '' // 把showPanel原来的值去掉
+              setTimeout(() => {
+                this.showPanel2 = '1' // 如果上面没有把showPanel的值改掉，此处取值和原来的showPanel一样，那么也不会生效。
+              }, 0)
+              if (that.taskCheckPointLists.length === 0) {
+                that.value2 = false
+                that.$Message.info('暂无任务检查点')
+              } else {
+                that.value2 = true
+              }
+            } else {
+              alert('服务器开小差啦～～ \n' + error.message)
+            }
+          }).catch(error => {
+          console.log(error)
+          alert('系统异常～～ \n' + error.message)
+        })
+      } else {
+        instance.get(that.GLOBAL.serverPath + "/milestone/getMilestone?id=" + id + "&type=" + (type === "活动" ? "act" : "actSub"))
+          .then(res => {
+            if (res.data.success) {
+              let results = res.data.data
+              results.forEach( result => {
+                let obj = {};
+                obj.id = result.milestoneId;
+                obj.milestoneType = type;
+                obj.milestoneName = result.milestoneName;
+                obj.milestoneMemo = result.milestoneMemo;
+                obj.milestoneReport = result.milestoneReport;
+                obj.milestoneMonitor = result.milestoneMonitor;
+                obj.milestoneFrom = that.dateFormat(new Date(result.milestoneFrom * 1000), 'yyyy-MM-dd')
+                obj.milestoneTo = that.dateFormat(new Date(result.milestoneTo * 1000), 'yyyy-MM-dd')
+                that.milestoneLists.push(obj);
+              })
+              that.showPanel = '' // 把showPanel原来的值去掉
+              setTimeout(() => {
+                this.showPanel = '1' // 如果上面没有把showPanel的值改掉，此处取值和原来的showPanel一样，那么也不会生效。
+              }, 0)
+              if (that.milestoneLists.length === 0) {
+                that.value1 = false
+                that.$Message.info('暂无里程碑')
+              } else {
+                that.value1 = true
+              }
+            } else {
+              alert('服务器开小差啦～～ \n' + error.message)
+            }
+          }).catch(error => {
+          console.log(error)
+          alert('系统异常～～ \n' + error.message)
+        })
+      }
+    },
+
+
     getFilterArr (arr, id, type) {
       let that = this
       return arr.filter(function (item, i) {
@@ -867,6 +1216,65 @@ export default {
 
     deleteTask (data, id, type) {
       this.data = this.getFilterArr(data, id, type)
+      this.$refs.gantt.deleteTask(id)
+    },
+    publishActSub(data, id, type) {
+      let result = data;
+      (function traverse (node) {
+        node.forEach(i => {
+          if (i.id === id && i.type === type) {
+            i.publish = true
+          }
+          // 有子数据的先遍历子数据
+          i.children && traverse(i.children)
+        })
+      })(data)
+      return result
+
+    },
+
+
+    publish(id, type) {
+      let that = this
+      let instance = this.$ajax.create({
+        // 用来将token放到header上
+        headers: {'token': window.localStorage.getItem('token')}
+      })
+
+      switch (type) {
+        case "活动" :
+          instance.get(that.GLOBAL.serverPath + '/activity/publishActivity?actId=' + id)
+            .then(function (response) {
+              if (response.data.success) {
+                that.data[0].publish = true;
+                console.log(that.data)
+                alert(id + type + '发布成功！')
+              } else {
+                alert(response.data.errMsg)
+              }
+            })
+            .catch(function (error) {
+              console.log(error)
+              alert('服务器开小差啦～～ \n' + error.message)
+            })
+              break
+        case "子活动" :
+          instance.get(that.GLOBAL.serverPath + '/activity/publishActivitySub?actSubId=' + id)
+            .then(function (response) {
+              if (response.data.success) {
+                that.data = that.publishActSub(that.data, id, type);
+                console.log(that.data)
+                alert(id + type + '发布成功！')
+              } else {
+                alert(response.data.errMsg)
+              }
+            })
+            .catch(function (error) {
+              console.log(error)
+              alert('服务器开小差啦～～ \n' + error.message)
+            })
+          break
+      }
     },
     stop (id, type) {
       this.$Modal.confirm({
@@ -1023,6 +1431,7 @@ export default {
             obj.introduction = '介绍'
             obj.type = '子活动'
             obj.children = []
+            obj.publish = false
             i.children.push(obj)
           }
           // 有子数据的先遍历子数据
@@ -1126,10 +1535,63 @@ export default {
       })(data)
       return result
     },
+    addMilestone() {
+      let that = this
+      let instance = this.$ajax.create({
+        // 用来将token放到header上
+        headers: {'token': window.localStorage.getItem('token')}
+      })
+      instance.post(that.GLOBAL.serverPath + '/milestone/addMilestone', {
+        // parentId 其实为当前行的id
+        id: that.parentId,
+        type: that.type,
+        milestoneName: that.milestone.milestoneName,
+        milestoneMemo: that.milestone.milestoneMemo,
+        milestoneFrom: that.milestone.milestoneFrom,
+        milestoneTo: that.milestone.milestoneTo,
+      }).then(function (response) {
+        if (response.data.success) {
+          alert("增加里程碑成功");
+          that.milestone = {};
+        } else {
+          alert(response.data.errMsg)
+        }
+      })
+        .catch(function (error) {
+          console.log(error)
+          alert('服务器开小差啦～～ \n' + error.message)
+        })
+    },
+
+    addTaskCheckPoint() {
+      let that = this
+      let instance = this.$ajax.create({
+        // 用来将token放到header上
+        headers: {'token': window.localStorage.getItem('token')}
+      })
+      instance.post(that.GLOBAL.serverPath + '/task/addTaskCheckPoint', {
+        // parentId 其实为当前行的id
+        taskId: that.parentId,
+        taskCheckPointName: that.taskCheckPoint.taskCheckPointName,
+        taskCheckPointMemo: that.taskCheckPoint.taskCheckPointMemo,
+        taskCheckPointDate: that.taskCheckPoint.taskCheckPointDate,
+      }).then(function (response) {
+        if (response.data.success) {
+          alert("增加检查点成功");
+          that.taskCheckPoint = {};
+        } else {
+          alert(response.data.errMsg)
+        }
+      })
+        .catch(function (error) {
+          console.log(error)
+          alert('服务器开小差啦～～ \n' + error.message)
+        })
+    },
     change (status) {
       this.$Message.info('开关状态：' + status)
     },
-    fetchData (personId) {
+    fetchData () {
       var that = this
       let instance = this.$ajax.create({
         // 用来将token放到header上
@@ -1137,7 +1599,7 @@ export default {
       })
 
       // 获取会员所属学会信息
-      instance.get(that.GLOBAL.serverPath + '/common/getInstByPersonId?personId=' + personId)
+      instance.get(that.GLOBAL.serverPath + '/common/getInstByPersonId')
         .then(function (response) {
           if (response.data.success) {
             let datas = response.data.data
