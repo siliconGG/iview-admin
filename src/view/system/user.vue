@@ -23,19 +23,19 @@
         :mask-closable="false"
         :styles="styles"
       >
-        <Form ref="formData" :model="formData">
+        <Form ref="formData" :model="formData" :rules="ruleValidate">
           <p :style="pStyle">账号信息</p>
           <div class="demo-drawer-profile">
             <FormItem label="账号：" prop="loginName">
               <Input v-model="formData.loginName" placeholder="填入账号，用于登录使用，请牢记"></Input>
             </FormItem>
-            <FormItem label="密码" prop="passwd">
-              <Input type="password" v-model="formData.passwd"></Input>
+            <FormItem label="密码" prop="loginPassword">
+              <Input type="password" v-model="formData.loginPassword"></Input>
             </FormItem>
             <FormItem label="确认密码" prop="passwdCheck">
               <Input type="password" v-model="formData.passwdCheck"></Input>
             </FormItem>
-            <FormItem label="学会：" prop="roleId">
+            <FormItem label="角色：" prop="roleId">
               <Select v-model="formData.roleId" placeholder="选择账号角色">
                 <Option v-for="item in roleList" :value="item.roleId" :key="item.roleId">{{item.roleName}}</Option>
               </Select>
@@ -168,7 +168,7 @@
       const validatePassCheck = (rule, value, callback) => {
         if (value === '') {
           callback(new Error('请再次输入密码'))
-        } else if (value !== this.formData.passwd) {
+        } else if (value !== this.formData.loginPassword) {
           callback(new Error('两次密码不匹配!'))
         } else {
           callback()
@@ -282,7 +282,7 @@
         formData: {
           id: '',
           loginName: '',
-          passwd: '',
+          loginPassword: '',
           passwdCheck: '',
           roleId: '',
           name: '',
@@ -303,6 +303,9 @@
           memo: ''
         },
         ruleValidate: {
+          loginName: [
+            { required: true, message: '账号不能为空！', trigger: 'blur' }
+          ],
           name: [
             { required: true, message: '名字不能为空！', trigger: 'blur' }
           ],
@@ -314,16 +317,13 @@
             { required: true, message: '电话不能为空！', trigger: 'blur' },
             { type: 'string', min: 11, max: 11, message: '电话号码为11位！请校验', trigger: 'blur' }
           ],
-          instId: [
-            { required: true, message: '请选择您参加的学会！', trigger: 'change' }
-          ],
           sex: [
             { required: true, message: '请选择你的性别！', trigger: 'change' }
           ],
           formatBirthday: [
             { required: true, type: 'date', message: '请选择生日！', trigger: 'change' }
           ],
-          passwd: [
+          loginPassword: [
             { validator: validatePass, trigger: 'blur' }, {
               type: 'string',
               min: 3,
@@ -392,7 +392,7 @@
         this.formData.id = id || 0
         //获取学会列表
         axios.request({
-          url: 'societies/institutes/list',
+          url: 'common/institutes',
           method: 'get'
         }).then(res => {
           this.instList = res.data.data
@@ -423,7 +423,7 @@
                   this.formData.instId = res.data.data.instId
                   this.formData.name = res.data.data.name
                   this.formData.sex = res.data.data.sex
-                  this.formData.formatBirthday = res.data.data.birthday
+                  this.formData.formatBirthday = res.data.data.formatBirthday
                   this.formData.ethnic = res.data.data.ethnic
                   this.formData.partisan = res.data.data.partisan
                   this.formData.mail = res.data.data.mail
@@ -448,24 +448,30 @@
         this.addOrUpdateVisible=false
       },
       postUser (name) {
-        axios.request({
-          url: `authentication/user`,
-          method: `${this.formData.id ? 'put' : 'post'}`,
-          data: this.formData
-        }).then(res => {
-          if (res.data.code === 200) {
-            this.$Message.success({
-              title: '成功',
-              content: `${this.formData.id ? '更新成功' : '新增成功'}`
+        this.$refs[name].validate((valid) => {
+          if (valid) {
+            axios.request({
+              url: `authentication/user`,
+              method: `${this.formData.id ? 'put' : 'post'}`,
+              data: this.formData
+            }).then(res => {
+              if (res.data.code === 200) {
+                this.$Message.success({
+                  title: '成功',
+                  content: `${this.formData.id ? '更新成功' : '新增成功'}`
+                })
+              } else {
+                this.$Message.error({
+                  title: '错误',
+                  content: res.data.errMsg
+                })
+              }
+              this.getDataList()
+              this.cancel(name)
             })
           } else {
-            this.$Message.error({
-              title: '错误',
-              content: res.data.errMsg
-            })
+            this.$Message.error('注册失败，请检查!')
           }
-          this.getDataList()
-          this.cancel(name)
         })
       },
       deleteHandle(id) {

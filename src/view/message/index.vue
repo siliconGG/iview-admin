@@ -25,7 +25,7 @@
           <MenuItem v-for="item in messageList" :name="item.messageId" :key="`msg_${item.messageId}`">
             <div>
               <p class="msg-title">{{ item.messageTitle }}</p>
-              <Badge status="default" :text="item.create_time" />
+              <Badge status="default" :text="item.createTime" />
               <Button
                 style="float: right;margin-right: 20px;"
                 :style="{ display: item.loading ? 'inline-block !important' : '' }"
