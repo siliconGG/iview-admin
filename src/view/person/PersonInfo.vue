@@ -5,14 +5,6 @@
         <h1>个人信息</h1>
 
       </FormItem>
-      <Select v-model="model1"clearable  @on-change="selectSubEvent" style="width:200px">
-        <Option v-for="item in catagoryList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-      </Select>
-      <Upload action="//localhost:8081/upload/test"
-      :data="{'taskExecId':taskExecId,'docCatagory':docCatagory}">
-        <Button icon="ios-cloud-upload-outline">上传</Button>
-      </Upload>
-      <Button type="primary" @click="exportData()">导出</Button>
       <FormItem>
 
         <Button type="info" @click="enableEdit()">编辑</Button>

@@ -23,7 +23,7 @@
             </Col>
             <Col span="5">
               <FormItem label="学会注册时间：" prop="instRegisterDate">
-                    <Input v-model="formdata.instRegisterDate" ></Input>
+                    <Input v-model="formdata.instRegisterDate" disabled></Input>
               </FormItem>
             </Col >
           </Row>
@@ -39,19 +39,19 @@
             </Col>
             <Col span="8">
               <FormItem label="学会会员总数：" prop="memberCount">
-                <Input v-model="formdata.memberCount" ></Input>
+                <Input v-model="formdata.memberCount" disabled></Input>
               </FormItem>
             </Col>
             <Col span="7">
               <FormItem label="学会单位会员总数：" prop="compCount">
-                <Input v-model="formdata.compCount" ></Input>
+                <Input v-model="formdata.compCount" disabled></Input>
               </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="8">
               <FormItem label="学会所属行业分类：" prop="industryName">
-                <Input v-model="formdata.industryName" ></Input>
+                <Input v-model="formdata.industryName" disabled></Input>
               </FormItem>
             </Col>
             <Col span="8">
@@ -269,7 +269,7 @@ export default {
     }
   },
   created () {
-    this.fetchData(1)
+    this.fetchData()
   },
   methods: {
     showPeriods () {
@@ -371,8 +371,7 @@ export default {
       return format
     },
 
-    fetchData (instId) {
-      // todo 从何处获取到instId?
+    fetchData () {
       var that = this
       let instance = this.$ajax.create({
         // 用来将token放到header上
@@ -421,21 +420,20 @@ export default {
           headers: {'token': window.localStorage.getItem('token')}
         })
         if (valid) {
-          instance.post(that.GLOBAL.serverPath + '/member/infoModified', {
-            name: that.formdata.name,
-            sex: that.formdata.sex,
-            birthday: that.formdata.birthday,
-            ethnic: that.formdata.ethnic,
-            partisan: that.formdata.partisan,
-            mail: that.formdata.mail,
-            phone1: that.formdata.phone,
-            instQq: that.formdata.qq,
-            wechat: that.formdata.wechat,
-            memo: that.formdata.memo
+          instance.post(that.GLOBAL.serverPath + '/institute/instModify', {
+            instId: that.formdata.instId,
+            instName: that.formdata.instName,
+            instShort: that.formdata.instShort,
+            instIntroduction: that.formdata.instIntroduction,
+            instAddress: that.formdata.instAddress,
+            instWebsite: that.formdata.instWebsite,
+            instEngName: that.formdata.instEngName,
+            instMemo: that.formdata.instMemo,
+            instQq: that.formdata.instQq,
+            instWechat: that.formdata.instWechat
           })
             .then(function (response) {
               if (response.data.success) {
-                console.log(response.data)
                 alert('修改成功')
               } else {
                 alert('修改失败：' + response.data.errMsg)

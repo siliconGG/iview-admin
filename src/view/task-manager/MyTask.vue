@@ -4,7 +4,6 @@
       <Divider size="small" orientation="left">快速筛选</Divider>
       <Row>
         <RadioGroup type="button" @on-change="quickFilter">
-          <Radio label="editable">可编辑</Radio>
           <Radio label="priority">优先级</Radio>
         </RadioGroup>
       </Row>
@@ -15,48 +14,7 @@
     </Table>
     <Page :total="total" :page-size="10" @on-change="changePage"></Page>
 
-    <div>
-      <Drawer title="执行阶段信息" :closable="false" width="640" v-model="value1" >
-        <div>
-          <Collapse v-model="showPanel" accordion>
-            <Panel v-for='(list, index) in taskExecList'  v-bind:key='list.id' >
-              {{list.taskExecName}}
-              <div slot="content">
-                <h6 :style="pStyle">执行阶段id：{{list.taskExecId}} <Button type="success" shape="circle" :style="bStyle" @click="showUploadModal(list)">上传材料</Button></h6>
-                <Divider />
-                <h6 :style="pStyle">
-                  执行阶段汇报：{{list.taskExecReport}}
-                  <Button type="primary" shape="circle" :style="bStyle" @click="addReport(list)">填写汇报</Button>
-                </h6>
-                <h6 :style="pStyle">
-                  执行阶段反馈：{{list.taskExecMonitor}}
-                  <Button type="primary" shape="circle" :style="bStyle" @click="addFeedback(list)">填写反馈</Button>
-                </h6>
-                <Divider/>
-                <h6 :style="pStyle">
-                  日期：
-                    <DatePicker type="date" confirm placement="bottom-end" format="yyyy年M月d日" value="yyyy-MM-dd"
-                                v-model="list.taskExecDate"></DatePicker>
-                </h6>
-                <h6 :style="pStyle">
-                  <Progress :percent="list.taskExecRate" status="active" />
-                  <ButtonGroup size="large">
-                    <Button icon="ios-add" @click="addProgress(list)"></Button>
-                    <Button icon="ios-remove" @click="minusProgress(list)"></Button>
-                  </ButtonGroup>
-                </h6>
-                <h6 :style="pStyle">当前状态：{{list.taskExecStatusName}} 修改为->
-                  <Select v-model="list.taskExecStatus" style="width:200px">
-                  <Option v-for="item in taskStatusList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                  </Select>
-                  <Button type="primary" shape="circle" :style="bStyle" @click="modifyExec(list)">修改</Button>
-                </h6><Divider />
-              </div>
-            </Panel>
-          </Collapse>
-        </div>
-      </Drawer>
-    </div>
+
 
     <Modal v-model="modalForAdd"
            title="新建任务执行阶段"
@@ -140,14 +98,95 @@
             <Select v-model="select1" clearable @on-change="selectSubEvent" style="width:200px">
               <Option v-for="item in catagoryList" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select>
+
+            <RadioGroup v-model="discover">
+              <Radio label="true">
+                <Icon type="logo-apple"></Icon>
+                <span>覆盖原版本</span>
+              </Radio>
+              <Radio label="false">
+                <Icon type="logo-android"></Icon>
+                <span>不覆盖原版本</span>
+              </Radio>
+            </RadioGroup>
           </FormItem>
-          <Upload action="//localhost:8081/upload/test"
-                  :data="{'taskExecId':globalTaskExecId,'docCatagory':docCatagory, 'personId':personId}">
-            <Button icon="ios-cloud-upload-outline">上传</Button>
+          <!--<Upload action="//localhost:8081/upload/test"-->
+                  <!--:data="{'taskExecId':globalTaskExecId,'docCatagory':docCatagory, 'personId':personId, 'discover':discover}">-->
+            <!--<Button icon="ios-cloud-upload-outline">上传</Button>-->
+          <!--</Upload>-->
+          <Upload
+            multiple
+            type="drag"
+            action="//localhost:8081/upload/test"
+            :data="{'taskExecId':globalTaskExecId,'docCatagory':docCatagory, 'personId':personId, 'discover':discover}">
+            <div style="padding: 20px 0">
+              <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
+              <p>点击上传或将文件拖到这里</p>
+            </div>
           </Upload>
-          <Button type="primary" @click="exportData()">导出</Button>
         </Row>
       </Form>
+    </Modal>
+
+    <div>
+      <Drawer title="执行阶段信息" :closable="false" width="640" v-model="value1" >
+        <div>
+          <Collapse v-model="showPanel" accordion>
+            <Panel v-for='(list, index) in taskExecList'  v-bind:key='list.id' >
+              {{list.taskExecName}}
+              <div slot="content">
+                <h6 :style="pStyle">执行阶段id：{{list.taskExecId}} <Button type="success" shape="circle" :style="myStyle" @click="showUploadModal(list)">上传</Button>
+                  <Divider type="vertical"/><Button type="info" shape="circle" :style="bStyle" @click="showDownloadModal(list)">查看</Button></h6>
+                <Divider />
+                <h6 :style="pStyle">
+                  执行阶段汇报：{{list.taskExecReport}}
+                  <Button type="primary" shape="circle" :style="bStyle" @click="addReport(list)">填写汇报</Button>
+                </h6>
+                <h6 :style="pStyle">
+                  执行阶段反馈：{{list.taskExecMonitor}}
+                  <Button type="primary" shape="circle" :style="bStyle" @click="addFeedback(list)">填写反馈</Button>
+                </h6>
+                <Divider/>
+                <h6 :style="pStyle">
+                  日期：
+                  <DatePicker type="date" confirm placement="bottom-end" format="yyyy年M月d日" value="yyyy-MM-dd"
+                              v-model="list.taskExecDate"></DatePicker>
+                </h6>
+                <h6 :style="pStyle">
+                  <Progress :percent="list.taskExecRate" status="active" />
+                  <ButtonGroup size="large">
+                    <Button icon="ios-add" @click="addProgress(list)"></Button>
+                    <Button icon="ios-remove" @click="minusProgress(list)"></Button>
+                  </ButtonGroup>
+                </h6>
+                <h6 :style="pStyle">当前状态：{{list.taskExecStatusName}} 修改为->
+                  <Select v-model="list.taskExecStatus" style="width:200px">
+                    <Option v-for="item in taskStatusList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                  </Select>
+                  <Button type="primary" shape="circle" :style="bStyle" @click="modifyExec(list)">修改</Button>
+                </h6><Divider />
+              </div>
+            </Panel>
+          </Collapse>
+        </div>
+      </Drawer>
+    </div>
+
+    <Modal v-model="modalForDownload"
+           title="上传记录"
+           draggable="true"
+           width="1000">
+      <Collapse v-model="showPanel3" accordion>
+        <Panel v-for='(list, index) in documentList'  v-bind:key='list.documentId' >
+          {{list.docName}} <Divider type="vertical"/>版本号：第{{list.version}}版本
+          <div slot="content">
+            <h6 :style="pStyle">文件id：{{list.documentId}}<Divider type="vertical"/> 文件名：{{list.docName}}
+              <Button type="primary" shape="circle" :style="bStyle" @click="exportnpmData(list)">下载</Button></h6><Divider />
+            <h6 :style="pStyle">上传者：{{list.personName}} <Divider type="vertical"/>上传时间：{{list.modifyDate}}</h6>
+            <h6 :style="pStyle">版本号：第{{list.version}}版本 <Divider type="vertical"/>文件类型：{{list.docCatagory}}</h6>
+          </div>
+        </Panel>
+      </Collapse>
     </Modal>
 
     <div>
@@ -183,6 +222,7 @@
 
         modalForAdd: false,
         modalForUpload: false,
+        modalForDownload: false,
         select1: '',
         catagoryList: [{
           value: '通知',
@@ -210,8 +250,10 @@
         },
         showPanel: '0',
         showPanel2: '0',
+        showPanel3: '0',
         lists: [],
         taskCheckPointLists: [],
+        documentList: [],
         pStyle: {
           fontSize: '16px',
           color: 'rgba(0,0,0,0.85)',
@@ -223,10 +265,15 @@
           position: 'absolute',
           right: '16px',
         },
+        myStyle: {
+          position: 'absolute',
+          right: '66px',
+        },
         modal1: false,
         total: '',
         condi: '',
         currIndex: 0,
+        discover: false,
 
         publishList: [
           {
@@ -436,8 +483,26 @@
         this.modalForUpload = true
 
       },
-      exportData: function () {
-        let url = `//localhost:8081/upload/download?taskExecId=${this.globalTaskExecId}`
+      showDownloadModal(list) {
+        let that = this
+        let instance = this.$ajax.create({
+          // 用来将token放到header上
+          headers: {'token': window.localStorage.getItem('token')}
+        })
+        instance.get(that.GLOBAL.serverPath + '/upload/getDocuments?taskExecId=' + list.taskExecId)
+          .then( res => {
+            if (res.data.success) {
+              that.documentList = res.data.data;
+              that.modalForDownload = true
+            } else {
+              alert("服务器开下差啦～");
+            }
+          }).catch(e => {
+            alert("系统异常！")
+        })
+      },
+      exportData: function (list) {
+        let url = `//localhost:8081/upload/download?documentId=${list.documentId}`
         window.open(url)
       },
       addProgress (list) {
@@ -629,9 +694,6 @@
       },
       quickFilter(name) {
         switch (name) {
-          case "editable":
-            this.request(1, window.localStorage.getItem('personId'))
-            break;
           case "priority":
             this.request(1, null, true)
             break;
@@ -801,13 +863,15 @@
             alert('服务器开小差啦～～ \n' + error.message)
           })
       },
-      request (currentPage, personId, sortByPriority, stop) {
+      request (currentPage, editable, sortByPriority, stop) {
         var that = this
 
         axios.request({
           url: '/task/getOwnerTask',
           method: 'post',
           data: {
+            editable: editable,
+            sortByPriority: sortByPriority,
             page: currentPage
           }
         }).then(function (res) {

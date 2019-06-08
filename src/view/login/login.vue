@@ -29,13 +29,13 @@ export default {
     ]),
     handleSubmit ({ userName, password }) {
       this.handleLogin({ userName, password }).then(res => {
-        this.getUserInfo().then(res => {
-          this.$router.push({
-            name: this.$config.homeName
-          })
-        })
+          this.getUserInfo().then(res => {
+            this.$router.push({
+              name: this.$config.homeName
+            })
+          });
       }).catch(err => {
-        this.$Message.error(err)
+        alert("密码错误或账号不存在！")
       })
     }
   }

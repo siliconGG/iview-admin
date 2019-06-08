@@ -23,7 +23,7 @@
               <h6>负责人：{{list.chargerName}} <Divider type="vertical" /> 负责人头衔：{{list.personTitleName}}</h6><Divider />
               <h6>分会简称：{{list.instSubShort}}<Divider type="vertical" /> 分会英文名：{{list.instSubEngName}}</h6><Divider />
               <h6>分会所在地：{{list.instSubAddress}}<Divider type="vertical" /> 分会介绍：{{list.instSubIntroduction}}</h6><Divider />
-              <div style="display:inline"><h6>分会当前届：第{{list.instSubPeriodNo}}届<Divider type="vertical" /><Button type="primary" shape="circle" @click="test(list.id)">查看详情</Button></h6></div><Divider />
+              <div style="display:inline"><h6>分会当前届：第{{list.instSubPeriodNo}}届<Divider type="vertical" /></h6></div><Divider />
               <h6>分会开始时间：{{list.instSubPeriodFrom}}<Divider type="vertical" /> 分会结束时间：{{list.instSubPeriodTo}}</h6><Divider />
             </div>
           </Panel>
@@ -202,12 +202,12 @@ export default {
         content: `<h3>学会名称:${this.instituteData[index].instName}</h3><br>
                     <h3>学会英文名:      ${this.instituteData[index].instEngName}</h3><br>
                     <h3>学会当前第几届:   第${this.instituteData[index].instPeriods.length === 0 ? '0' : this.instituteData[index].instPeriods[0].instPeriodNo}届</h3><br>
-                    <h3>学会本届负责人:   <a href="http://www.baidu.com" target="_blank">${this.instituteData[index].instPeriods.length === 0 ? '' : this.instituteData[index].instPeriods[0].personChargers[0].personMember.name}</a></h3><br>
+                    <h3>学会本届负责人:   ${this.instituteData[index].instPeriods.length === 0 ? '' : this.instituteData[index].instPeriods[0].personChargers[0].personMember.name}</a></h3><br>
                     <h3>负责人头衔:      ${this.instituteData[index].instPeriods.length === 0 ? '' : this.instituteData[index].instPeriods[0].personChargers[0].personTitleName}</h3><br>
                     <h3>学会本届开始时间: ${this.instituteData[index].instPeriods.length === 0 ? '' : this.instituteData[index].instPeriods[0].instPeriodFrom}</h3><br>
                     <h3>学会本届结束时间: ${this.instituteData[index].instPeriods.length === 0 ? '' : this.instituteData[index].instPeriods[0].instPeriodTo}</h3><br>
-                    <h3>学会网址:        ${this.instituteData[index].instWebsite}</h3><br>
-                    <h3>学会备注:        ${this.instituteData[index].instMemo}</h3>`,
+                    <h3>学会备注:        ${this.instituteData[index].instMemo}</h3><br>
+                    <h3>学会网址:        <a href="http://${this.instituteData[index].instWebsite}" target="_blank"/>${this.instituteData[index].instWebsite}</h3> `,
         width: 700,
         onOk: () => {
           this.$Message.info('Clicked ok')

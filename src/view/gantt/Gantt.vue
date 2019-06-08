@@ -134,6 +134,8 @@ export default {
         person_id: task.person_id,
         priority: task.priority,
         priorityName: task.priorityName,
+        milestone: task.milestone,
+
         act_short: task.act_short,
         act_eng_name: task.act_eng_name,
         act_address: task.act_address,
@@ -156,6 +158,7 @@ export default {
         person_id: task.person_id,
         priority: task.priority,
         priorityName: task.priorityName,
+        milestone: task.milestone,
         act_short: task.act_short,
         act_eng_name: task.act_eng_name,
         act_address: task.act_address,
@@ -487,13 +490,20 @@ export default {
 
     // 设置今天标志
     var date_to_str = gantt.date.date_to_str(gantt.config.task_date)
-    var today = new Date(2019, 3, 3)
+    var today = new Date()
     gantt.addMarker({
       start_date: today,
       css: 'today',
       text: '今天',
       title: 'Today: ' + date_to_str(today)
     })
+
+    // 设置里程碑提示
+    gantt.templates.rightside_text = function (start, end, task) {
+      if (task.milestone === '1') {
+        return "有里程碑";
+      }
+    };
 
     // 设置进度条<0.5标红
     gantt.templates.task_class = function (start, end, task) {

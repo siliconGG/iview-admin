@@ -84,7 +84,6 @@ export default {
           const data = res.data.data
           window.localStorage.setItem('token', data.token)
           window.localStorage.setItem('reloadFlag', 1)
-
           commit('setToken', data.token)
           resolve()
         }).catch(err => {
