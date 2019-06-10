@@ -16,7 +16,7 @@
       </i-col>
       <i-col :md="24" :lg="16" style="margin-bottom: 20px;">
         <Card shadow>
-          <chart-bar style="height: 300px;" :value="barData" text="每周用户活跃量"/>
+          <chart-bar style="height: 300px;" :value="barData" text="每周学会会员活跃量"/>
         </Card>
       </i-col>
     </Row>
@@ -45,28 +45,25 @@ export default {
   data () {
     return {
       inforCardData: [
-        { title: '新增用户', icon: 'md-person-add', count: 803, color: '#2d8cf0' },
-        { title: '累计点击', icon: 'md-locate', count: 232, color: '#19be6b' },
-        { title: '新增问答', icon: 'md-help-circle', count: 142, color: '#ff9900' },
-        { title: '分享统计', icon: 'md-share', count: 657, color: '#ed3f14' },
-        { title: '新增互动', icon: 'md-chatbubbles', count: 12, color: '#E46CBB' },
-        { title: '新增页面', icon: 'md-map', count: 14, color: '#9A66E4' }
+        { title: '学会个数', icon: 'ios-people', count: 25, color: '#2d8cf0' },
+        { title: '累计点击', icon: 'md-locate', count: 22, color: '#19be6b' },
+        { title: '会员总数', icon: 'ios-man', count: 142, color: '#ff9900' },
+        { title: '单位会员', icon: 'ios-school', count: 40, color: '#ed3f14' },
+        { title: '新闻数量', icon: 'md-chatbubbles', count: 12, color: '#E46CBB' }
       ],
       pieData: [
         {value: 335, name: '直接访问'},
-        {value: 310, name: '邮件营销'},
-        {value: 234, name: '联盟广告'},
-        {value: 135, name: '视频广告'},
-        {value: 1548, name: '搜索引擎'}
+        {value: 135, name: 'APP访问'},
+        {value: 548, name: '搜索引擎'}
       ],
       barData: {
-        Mon: 13253,
-        Tue: 34235,
-        Wed: 26321,
-        Thu: 12340,
-        Fri: 24643,
-        Sat: 1322,
-        Sun: 1324
+        Mon: 3253,
+        Tue: 4235,
+        Wed: 6321,
+        Thu: 2340,
+        Fri: 4643,
+        Sat: 322,
+        Sun: 324
       }
     }
   },
