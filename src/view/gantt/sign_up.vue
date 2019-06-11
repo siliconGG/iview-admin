@@ -143,7 +143,7 @@
             活动名额: {{signUpInfo.actTotalNum}}
           </Col>
           <Col span="12">
-            活动报名人数: {{signUpInfo.checkInNum}}
+            活动报名人数: {{signUpInfo.signUpNum}}
           </Col>
         </Row>
       </div>
@@ -167,7 +167,7 @@
               签到状态： 不能签到
             </Col>
             <Col span="12">
-              签到人数: {{signUpInfo.signUpNum}}
+              签到人数: {{signUpInfo.checkInNum}}
             </Col>
           </Row>
         </div>
@@ -534,7 +534,7 @@
           if (res.data.code === 200) {
             this.$Message.success({
               title: '成功',
-              content: '发起活动报名成功！'
+              content: '恢复成功！'
             })
             axios.request({
               url: `sign/starting/${signId}`,
@@ -558,7 +558,7 @@
           if (res.data.code === 200) {
             this.$Message.success({
               title: '成功',
-              content: '发起活动报名成功！'
+              content: '停用成功！'
             })
             axios.request({
               url: `sign/starting/${signId}`,
